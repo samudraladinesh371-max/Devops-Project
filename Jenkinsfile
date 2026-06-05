@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_IMAGE = "samudraladinesh371/backend-app:v1"
+    }
+    stages {
+
+        stage('Clone Code') {
+            steps {
+                git branch: 'main',
+                url: 'https://github.com/samudraladinesh371-max/Devops-Project.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'cd dev/backend && npm install'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                // ✅ Fixed path to match your folder structure
+                sh 'docker build -t ${DOCKER_IMAGE} ./dev/backend'
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                withDockerRegistry([credentialsId: 'dockerhub']) {
+                    sh 'docker push ${DOCKER_IMAGE}'
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl apply -f k8s/'
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh 'kubectl rollout status deployment/backend'
+                sh 'kubectl get pods'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Pipeline succeeded! App deployed successfully.'
+        }
+        failure {
+            echo '❌ Pipeline failed! Check logs above.'
+        }
+    }
+}
