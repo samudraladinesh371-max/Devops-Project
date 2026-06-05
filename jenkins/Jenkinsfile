@@ -1,18 +1,16 @@
 pipeline {
     agent any
-
     environment {
         DOCKER_IMAGE = "samudraladinesh371/backend-app:v1"
     }
-
     stages {
 
-		stage('Clone Code') {
-			steps {
-				git branch: 'main',
-				url: 'https://github.com/samudraladinesh371-max/Devops-Project.git'
-			}
-		}
+        stage('Clone Code') {
+            steps {
+                git branch: 'main',
+                url: 'https://github.com/samudraladinesh371-max/Devops-Project.git'
+            }
+        }
 
         stage('Install Dependencies') {
             steps {
@@ -22,7 +20,8 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t ${DOCKER_IMAGE} ./backend'
+                // ✅ Fixed path to match your folder structure
+                sh 'docker build -t ${DOCKER_IMAGE} ./dev/backend'
             }
         }
 
