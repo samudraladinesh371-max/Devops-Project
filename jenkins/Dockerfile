@@ -11,7 +11,15 @@ ca-certificates \
 gnupg \
 lsb-release 
 
-# Install Node.js and npm
+# Install Docker CLI
+
+
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker.gpg && \
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable" > /etc/apt/sources.list.d/docker.list && \
+apt-get update && \
+apt-get install -y docker-ce-cli
+
+# Install Node.js
 
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
 apt-get install -y nodejs
