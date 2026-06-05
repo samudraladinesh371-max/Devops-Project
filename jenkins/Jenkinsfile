@@ -7,11 +7,12 @@ pipeline {
 
     stages {
 
-        stage('Clone Code') {
-            steps {
-                git 'https://github.com/samudraladinesh371-max/Devops-Project'
-            }
-        }
+		stage('Clone Code') {
+			steps {
+				git branch: 'main',
+				url: 'https://github.com/samudraladinesh371-max/Devops-Project.git'
+			}
+		}
 
         stage('Install Dependencies') {
             steps {
