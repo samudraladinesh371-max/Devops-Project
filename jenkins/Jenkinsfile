@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+    stages {
+        stage('Clone Code') {
+            steps {
+                // ✅ Verify this is your exact GitHub repo URL
+                git 'https://github.com/samudraladinesh371-max/Devops-Project'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                // ❌ yourdockerhub → ✅ your real Docker Hub username
+                sh 'docker build -t samudraladinesh371/node-app:v1 app/'
+            }
+        }
+        stage('Push Image') {
+            steps {
+                // ❌ yourdockerhub → ✅ your real Docker Hub username
+                withDockerRegistry([credentialsId: 'dockerhub']) {
+                    sh 'docker push samudraladinesh371/node-app:v1'
+                }
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl apply -f k8s/'
+            }
+        }
+    }
+}
